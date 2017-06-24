@@ -1,4 +1,3 @@
-import Geohash
 from Coordinate_Object import Coordinate_Object
 
 class Sensor(Coordinate_Object):
@@ -8,11 +7,7 @@ class Sensor(Coordinate_Object):
 
     def __init__(self, x, y):
         Coordinate_Object.__init__(self, x, y)
-        self.id = Geohash.encode(x, y);
         self.range = 8;
-
-    def decode_id(self):
-        return Geohash.decode(self.id)
 
     def __hash__(self):
         return hash((self.x, self.y, self.range))
