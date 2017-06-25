@@ -10,7 +10,7 @@ class TSTP_Admission_Control:
     def __init__(self):
         self.wsn = TSTP_WSN()
         self.estimator = Burden_Estimator(self.wsn)
-        self.serial_manager = Serial_Manager(*self)
+        self.serial_manager = Serial_Manager(self)
 
     def handle_new_sensor_request(self, sensor):
         isAceptable = self.estimator.is_sensor_aceptable(sensor)
@@ -26,4 +26,4 @@ class TSTP_Admission_Control:
 
     def notify(self, isAceptable):
         pass
-        # se.write(isAceptable)
+        # self.serial_manager.write(isAceptable)

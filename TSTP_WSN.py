@@ -24,6 +24,7 @@ class TSTP_WSN:
 
     def add_interest(self, interest):
         print ("interest added on TSTP")
+        self.graph.draw()
 
     def get_sensors_in_range(self, coordinate_object):
         return self.rtree.get_sensors_in_range(coordinate_object)
