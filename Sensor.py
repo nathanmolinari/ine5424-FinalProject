@@ -4,10 +4,11 @@ class Sensor(Coordinate_Object):
 
     id = 0;
     range = 0;
+    burden = 0;
 
-    def __init__(self, x, y):
+    def __init__(self, x, y, range):
         Coordinate_Object.__init__(self, x, y)
-        self.range = 8;
+        self.range = range;
 
     def __hash__(self):
         return hash((self.x, self.y, self.range))
@@ -18,4 +19,4 @@ class Sensor(Coordinate_Object):
         return False
 
     def __str__(self):
-     return "("+ str(self.x) + ", " + str(self.y) + ")"
+     return "("+ str(self.x) + ", " + str(self.y) + ", " + str(self.range) + ")"

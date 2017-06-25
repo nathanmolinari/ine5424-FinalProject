@@ -20,4 +20,4 @@ class Sensor_Graph:
         return len(self.graph)
 
     def shortest_path(self, source, target):
-        return list(network.dijkstra_path(self.graph, source, target))
+        return list(network.dijkstra_path(self.graph, source, target, weight='distance'))

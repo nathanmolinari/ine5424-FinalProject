@@ -6,7 +6,7 @@ class TSTP_WSN:
 
     rtree = Sensor_Rtree()
     graph = Sensor_Graph()
-    gateway = Sensor(0, 0)
+    gateway = Sensor(0, 0, 10)
 
     def add_sensor(self, sensor):
         if(self.graph.contains(sensor)):

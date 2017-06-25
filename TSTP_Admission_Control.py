@@ -1,13 +1,16 @@
 from Serial_Manager import Serial_Manager
 from Burden_Estimator import Burden_Estimator
 from TSTP_WSN import TSTP_WSN
+import sys
 
 class TSTP_Admission_Control:
+
+    serial_manager = None
 
     def __init__(self):
         self.wsn = TSTP_WSN()
         self.estimator = Burden_Estimator(self.wsn)
-        self.serial = Serial_Manager(self)
+        self.serial_manager = Serial_Manager(*self)
 
     def handle_new_sensor_request(self, sensor):
         isAceptable = self.estimator.is_sensor_aceptable(sensor)
@@ -22,4 +25,5 @@ class TSTP_Admission_Control:
         self.notify(isAceptable)
 
     def notify(self, isAceptable):
-        self.serial.write(isAceptable)
+        pass
+        # se.write(isAceptable)

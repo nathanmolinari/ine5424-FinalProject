@@ -1,25 +1,29 @@
 # from TSTP_Admission_Control import TSTP_Admission_Control as Admission_Control
 from Interest import Interest
-from enum import Enum
+from enum import IntEnum, unique
 from Sensor import Sensor
+from Serial import Serial
 
-class Request_Type(Enum):
+@unique
+class Request_Type(IntEnum):
     SENSOR = 0
     INTEREST = 1
+
+@unique
+class Index(IntEnum):
+    TYPE = 0
+    X = 1
+    Y = 2
+    Z = 3
+    RADIUS = 4
+    PERIOD = 5
+    EXPIRY = 6
 
 class Serial_Manager:
 
     def __init__(self, Admission_Control):
-        self.Admission_Control = Admission_Control;
-
-    def read(self):
-        data = self.readLine()
-        request_type, param = self.extract_data(data)
-
-        if(request_type == Request_Type.INTEREST):
-            Admission_Control.handle_new_interest_request(param)
-        else:
-            Admission_Control.handle_new_sensor_request(param)
+        self.admission_control = Admission_Control;
+        self.serial = Serial(self)
 
     def write(self, data):
         if data:
@@ -27,27 +31,38 @@ class Serial_Manager:
         else:
             print("Writing on serial fail")
 
-    def readLine(self):
-        print("Dados lidos do serial foram LALALALA")
+    def handle_serial_request(self, data):
+        print(data)
+        if(data[Index.TYPE] == Request_Type.SENSOR):
+            sensor = self.extract_sensor_data(data)
+            self.admission_control.handle_new_sensor_request(sensor)
+        else:
+            interest = self.extract_interest_data(data)
+            self.admission_control.handle_new_interest_request(interest)
 
-    def extract_data(self, data):
-        x = 10
-        y = 10
-        radius = 5
-        period = 200
-        expiracy = 2000000
+    def extract_sensor_data(self, data):
+        x = data[Index.X]
+        y = data[Index.Y]
+        radius = data[Index.RADIUS]
+        return Sensor(x, y, radius)
 
-        param = Interest(x, y, radius, period, expiracy)
-        request_type = Request_Type.INTEREST
+    def extract_interest_data(self, data):
+        x = data[Index.X]
+        y = data[Index.Y]
+        radius = data[Index.RADIUS]
+        period = data[Index.PERIOD]
+        expiry = data[Index.EXPIRY]
+        return Interest(x, y, radius, period, expiry)
 
-        return request_type, param
+    def write(self, data):
+        self.serial.write(data)
 
     def new_sensor_request(self, x, y):
         print("Serial recevied new sensor request with coordinates", x, y)
         sensor = Sensor(x, y)
-        self.Admission_Control.handle_new_sensor_request(sensor)
+        self.admission_control.handle_new_sensor_request(sensor)
 
     def new_interest_request(self, x, y, radius, period, expiracy):
         print("Serial recevied new interest request with coordinates", x, y)
         interest = Interest(x, y, radius, period, expiracy)
-        self.Admission_Control.handle_new_interest_request(interest)
+        self.admission_control.handle_new_interest_request(interest)
